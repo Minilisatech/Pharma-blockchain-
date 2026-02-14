@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blockchain Supply Chain Transparency | Pharma</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f6f8;
+      color: #333;
+    }
+    header {
+      background: #0b3c5d;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background: #1d2731;
+      padding: 10px;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    section {
+      padding: 40px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+    footer {
+      background: #0b3c5d;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    button {
+      background: #0b3c5d;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d2731;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Blockchain in Supply Chain Transparency</h1>
+  <p>Pharmaceutical Traceability from Manufacturer to Consumer</p>
+</header>
+
+<nav>
+  <a href="#dashboard">Dashboard</a>
+  <a href="#logbook">Logbook</a>
+  <a href="#tracker">Medical Tracker</a>
+  <a href="#verify">Drug Verification</a>
+</nav>
+
+<!-- Dashboard -->
+<section id="dashboard">
+  <div class="card">
+    <h2>Dashboard</h2>
+    <p>Real-time overview of pharmaceutical supply chain activities.</p>
+    <ul>
+      <li>✔ Active Manufacturers</li>
+      <li>✔ Registered Distributors</li>
+      <li>✔ Verified Pharmacies</li>
+      <li>✔ Blockchain-confirmed Drug Batches</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Blockchain Logbook -->
+<section id="logbook">
+  <div class="card">
+    <h2>Blockchain Logbook</h2>
+    <p>Immutable record of every transaction in the drug lifecycle.</p>
+    <form id="logForm">
+      <input type="text" id="batchId" placeholder="Batch ID" required />
+      <input type="text" id="actor" placeholder="Actor (Manufacturer / Distributor / Pharmacy)" required />
+      <input type="text" id="action" placeholder="Action Performed" required />
+      <button type="submit">Record on Blockchain</button>
+    </form>
+  </div>
+</section>
+
+<!-- Medical & Supply Chain Tracker -->
+<section id="tracker">
+  <div class="card">
+    <h2>Medical &amp; Supply Chain Tracker</h2>
+    <p>Track drug movement and patient interaction (HIPAA/GDPR compliant).</p>
+    <form id="trackerForm">
+      <input type="text" id="serialNumber" placeholder="Drug Serial Number" required />
+      <input type="text" id="location" placeholder="Current Location" required />
+      <input type="date" id="trackDate" required />
+      <button type="submit">Update Tracker</button>
+    </form>
+  </div>
+</section>
+
+<!-- Consumer Drug Verification -->
+<section id="verify">
+  <div class="card">
+    <h2>Consumer Drug Verification</h2>
+    <p>Consumers can verify authenticity using blockchain hash.</p>
+    <input type="text" id="hashInput" placeholder="Enter QR Code / Hash" />
+    <button id="verifyBtn">Verify Drug</button>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Blockchain Supply Chain Transparency | Pharmaceutical Industry</p>
+</footer>
+
+<script>
+  const API_BASE = 'http://localhost:3000/api';
+
+  // Logbook form submission
+  document.getElementById('logForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      batchId: document.getElementById('batchId').value,
+      actor: document.getElementById('actor').value,
+      action: document.getElementById('action').value
+    };
+    try {
+      const res = await fetch(`${API_BASE}/log`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      alert(data.status || 'Recorded successfully!');
+      e.target.reset();
+    } catch (err) {
+      alert('Error connecting to backend. Is the server running?');
+    }
+  });
+
+  // Tracker form submission
+  document.getElementById('trackerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const payload = {
+      serialNumber: document.getElementById('serialNumber').value,
+      location: document.getElementById('location').value,
+      date: document.getElementById('trackDate').value
+    };
+    try {
+      const res = await fetch(`${API_BASE}/track`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      alert(data.status || 'Tracker updated!');
+      e.target.reset();
+    } catch (err) {
+      alert('Error connecting to backend. Is the server running?');
+    }
+  });
+
+  // Drug Verification
+  document.getElementById('verifyBtn').addEventListener('click', async () => {
+    const hash = document.getElementById('hashInput').value.trim();
+    if (!hash) return alert('Please enter a QR code or hash.');
+    try {
+      const res = await fetch(`${API_BASE}/verify/${encodeURIComponent(hash)}`);
+      const data = await res.json();
+      alert(data.valid ? '✅ Drug verified as authentic.' : '❌ Drug could not be verified.');
+    } catch (err) {
+      alert('Error connecting to backend. Is the server running?');
+    }
+  });
+</script>
+
+</body>
+</html>
